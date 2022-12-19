@@ -6,7 +6,33 @@ var isRunning = r;
 var isAttacking = a;
 var player = { name: playerName, hp: 100, rewards: [] };
 var playerStuff = ["shoes", "tent", "water"];
-var enemies = ["falling rocks", "floods", "wild animals"];
+
+let enemies = []
+
+function Enemies (enemyName, hp, weapon) {
+  this.enemyName = enemyName;
+  this.hp = hp;
+  this.weapon = weapon;
+  
+  
+}
+
+let enemies1 = new Enemies ("rockTroll", 100, "rocks",);
+let enemies2 = new Enemies ("Mr.mudFlood", 100, "mud", );
+let enemies3 = new Enemies ("wildBoar posse", 100, "tusks");
+
+enemies.push(enemies1, enemies2, enemies3)
+
+const myInventory = []
+
+//********Steps for Inventory******
+//1. Create an empty array
+//2. Push enemies weapon into array
+
+
+
+// write a readlineQuestion asking the player to check there Inventory by pressing "p"for print
+
 var playerName = readline.question(
   "Welcome to Hitch Hiker fellow traverller what's your name ? "
 );
@@ -49,39 +75,122 @@ function walking() {
       console.log("You can continue walking");
     }
 
-    //*************************************** I'm tring to get this half of my game to run, but having trouble will reach out to Dev-Lvl 1 for help ************** */
 
-    //you can create an if statement stating if there are 0 enemies left in the enemies' array, the game ends. the game can end by using isPlaying = false
   }
-  if (random > 0.10) {
-    console.log("Enemies are attacking you. ");
-    var question1 = readline.question(
-      `Oh no! ${playerName} what would you like to do next, R for run, or A to fight back `,
-      {}
-    );
-    // enemies functions tryig to get *****This half of my code to run*******
-    // var isRunning = r
-    // var isAttacking = a
-    var message = ""
-    if (isRunning === r) {
-      //conditional statement
-     
-        message = "Good choice, I would've done the same thing. let's get out of here "
-      
-    }
-      
-    } else if (isAttacking === a) {
-        message = "You chose to fight"
-      // if(isAttacking === null) {
-        message = "Good choice, but you don't have any weapons. "
-      } else (
-        message ='you are now dead'
-      )
-    } 
+  if (random > 0.1) {
+
+
+
+
   
-// }
-console.log(isRunning);
-console.log(isAttacking);
+
+    var question2 = readline.keyIn(
+      `Oh no! ${playerName} what would you like to do next, R for run, or A to fight back `,
+      { limit: "ra" }
+    );
+    
+
+    if (question2 === "r") {
+      //conditional statement
+      console.log("You chose to run");
+      console.log(
+        "Good choice, I would've done the same thing. let's get out of here "
+      );
+
+      
+      running()
+      //create a separate function called run(or whatever variable name) and call that function here
+      //run()
+    } else if (question2 === "a") {
+      console.log("You chose to fight");
+      // if(isAttacking === null) {
+        //create a separate function called attack(or whatever variable name) and call that function here
+        attacked()
+      // console.log("Good choice, but you don't have any weapons. ");
+    } else console.log("you are now dead");
+  }
+
+}
+
+function attacked () {
+let randomEnemies = enemies[Math.floor(Math.random() * enemies.length)];
+
+  console.log(`You are now in a fight for your life against ${randomEnemies.enemyName} `);
+
+ const hpPlayerLosses = Math.floor (Math.random() * 100);
+//  console.log(hpPlayerLosses, "random player hp")
+
+ let newPlayerHp = player.hp - hpPlayerLosses
+ console.log(`The enemy striked you. Your hp is now ${newPlayerHp}`)
+
+ const hpEnemyLosses = Math.floor (Math.random() * 100)
+//  console.log(hpEnemyLosses, "random enemy hp")
+
+let newEnemyHp = randomEnemies.hp - hpEnemyLosses
+
+console.log(`You hit the enemy. The enemy's hp is now ${newEnemyHp}`)
+
+
+while (newPlayerHp > 0 && newEnemyHp > 0){
+  newPlayerHp -= hpPlayerLosses;
+
+  // if(newPlayerHp > 0){
+    console.log(`Your hp is now ${newPlayerHp}. `)
+    // }
+    newEnemyHp -= hpEnemyLosses
+    // if(newEnemyHp > 0){
+      console.log(`${randomEnemies.enemyName} hp is now ${newEnemyHp}. `);
+      // }
+    
+    } 
+  if(newPlayerHp < 0) {
+    console.log(`You were defeated by ${randomEnemies.enemyName}`);
+    isPlaying = false
+  } else if (newEnemyHp <= 0) {
+    console.log(`You defeated ${randomEnemies.enemyName}`);
+    //if enemy is defeated remove enemy from array
+    const randomEnemyIndex = enemies.indexOf(randomEnemies)
+    enemies.splice(randomEnemyIndex, 1)
+    console.log(enemies, "enemies removed")
+    //**********logic for pushing items/weapons into inventory goes here**************
+    myInventory.push(randomEnemies.weapon)
+    console.log(myInventory, "inventory")
+    //you can use readline sync's key in method to view inventory
+  
+  } 
+
+  //if the enemy array is less than or equal to 0, end game because no enemies are left
+  if(enemies.length <= 0){
+    console.log("You have defeated all of the enemies.")
+    isPlaying = false
+  }
+
+}
+//create function for attacking here
+//use math.random to randomize how much hp a player loses
+//use math.random to randomize how much hp the enemy loses
+//also if you beat the enemy, you can use the splice method to remove the enemy from the enemy array
+
+
+
+  //you can push the defeated enemy's weapon/item inside of the inventory array
+
+
+//create function for running here
+function running() {
+  //use math.random to get a randomized number
+  const randomChance = Math.random()
+  //there is a 50% chance of escaping
+  //if random number is greater that 50%, console log the player has escaped
+  if (randomChance > 0.50 ) {
+    console.log ("You have escaped the enemy hands")
+  } else {
+    console.log("You have failed to escape")
+    attacked()
+  }
+  //if random number is less than 50%, console  log the player has failed to escape and run the attacking function
+}
+// console.log(running);
 
 //end game is no enemy
 // } else if (`Hello ${playerStuff} + + is being depleted`) {
@@ -116,3 +225,4 @@ console.log(isAttacking);
 // }//user wants to stop
 
 // console.log(user_Q1 () || user_Q2());
+
